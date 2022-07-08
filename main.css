@@ -1,9 +1,15 @@
 body {
-    width: 100vw;
+    width: 1000px;
+    margin: auto;
 }
 
 #canvas {
     border: 2px solid black;
     margin: auto;
     display: block;
+}
+
+button {
+    display: block;
+    margin: auto;
 }
