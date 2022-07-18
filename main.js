@@ -1,20 +1,20 @@
 const canvas = document.getElementById('canvas');
 const button = document.querySelector('button');
-
 let ctx = canvas.getContext('2d');
+
+
 let blockSize = 20;
 const directionPossible = ['up', 'right', 'down', 'left'];
-
-let direction = directionPossible[2];
-
 let interval;
 
+let direction = directionPossible[2];
 let snakes = [
     [0, 0],
     [0, 1],
     [0, 2]
 ]
-
+let score = 0;
+let apple = [getRandomInt(2, canvas.width / blockSize), getRandomInt(0, canvas.height / blockSize)]
 
 // Gestion des touches du clavier
 
@@ -36,21 +36,37 @@ document.addEventListener('keydown', (e) => {
 
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawSnake()
+    drawSnake();
+    drawApple();
+    drawScore();
 }
-function drawBlock(x, y) {
+
+function drawBlock(x, y, color) {
     ctx.beginPath()
-    ctx.fillStyle = 'rgb(0,215,90)';
+    ctx.fillStyle = color;
+    ctx.font = '40px serif'
     ctx.fillRect(x * blockSize, y * blockSize, blockSize, blockSize);
     ctx.closePath();
 }
+
 function drawSnake() {
     for (let snake of snakes) {
-        drawBlock(snake[0], snake[1]);
+        drawBlock(snake[0], snake[1], 'rgb(0,215,90)');
     }
     setDirection();
 }
 
+function drawApple() {
+    drawBlock(apple[0], apple[1], 'rgb(232,25,72')
+}
+
+function drawScore() {
+    ctx.beginPath()
+    ctx.fillStyle = 'rgb(128,138,138)'
+    ctx.fillText(score, canvas.width / 2, canvas.height / 2)
+    ctx.closePath()
+}
+// Permet la gestion de la direction
 function setDirection() {
     let newBlock;
     let lastBlock = snakes[snakes.length - 1];
@@ -76,21 +92,31 @@ function collision(block, snakeArray) {
         if (JSON.stringify(oneBlockSnake) === JSON.stringify(block)) {
             gameOver();
         }
+
     }
     // Pour empécher de sortir du canvas
     if (block[0] < 0 || block[1] < 0 || block[0] > (canvas.width / blockSize) || block[1] > (canvas.height / blockSize)) {
         gameOver();
     }
+    // Pour gérer la pomme
+    if (JSON.stringify(apple) === JSON.stringify(block)) {
+        score++;
+        apple = [getRandomInt(0, canvas.width / blockSize), getRandomInt(0, canvas.height / blockSize)];
+
+    }
 
 }
-
-
 
 
 function gameOver() {
     clearInterval(interval);
     alert('Vous avez perdu, pfff trop nul');
     document.location.reload();
+}
+
+
+function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min) + min);
 }
 
 
